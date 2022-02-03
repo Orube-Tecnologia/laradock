@@ -23,19 +23,32 @@ RUN apk --update add wget \
   curl \
   git \
   build-base \
+  libmemcached-dev \
   libmcrypt-dev \
   libxml2-dev \
-  linux-headers \
   pcre-dev \
   zlib-dev \
   autoconf \
   cyrus-sasl-dev \
   libgsasl-dev \
   oniguruma-dev \
-  libressl \
-  libressl-dev \
+  openssl \
+  openssl-dev \
   supervisor
 
+# Install PHP
+RUN apk --update add php; \
+    apk add php-json; \
+    apk add php-mbstring;
+
+USER root
+
+# Install Screen
+ARG INSTALL_SCREEN=false
+
+RUN if [ ${INSTALL_SCREEN} = true ]; then \
+  apk --update add screen \
+  ;fi
 
 RUN pecl channel-update pecl.php.net; \
   docker-php-ext-install mysqli mbstring pdo pdo_mysql tokenizer xml pcntl
