@@ -39,8 +39,13 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
   ;fi
 
 # Install Screen
-RUN apt-get update && \
-  apt-get install -y screen
+
+ARG INSTALL_SCREEN=false
+
+RUN if [ ${INSTALL_SCREEN} = true ]; then \
+    apt-get update && \
+    apt-get install -y screen \
+  ;fi
 
 # Start as root
 USER root
