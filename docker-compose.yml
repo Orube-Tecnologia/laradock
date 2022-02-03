@@ -196,8 +196,34 @@ services:
         - DOCKER_CERT_PATH=/certs/client
         - CHOKIDAR_USEPOLLING=true
       networks:
-        - frontend
-        - backend
+        frontend:
+          aliases:
+            - api-anexos.test
+            - api-autenticacao.test
+            - api-anticaptcha.test
+            - api-consultas.test
+            - api-dominios.test
+            - api-frotas.test
+            - api-frotas-bi.test
+            - api-gestor-frota.test
+            - api-importacoes.test
+            - api-multas.test
+            - api-notifications.test
+            - api-workers.test
+        backend:
+          aliases:
+            - api-anexos.test
+            - api-autenticacao.test
+            - api-anticaptcha.test
+            - api-consultas.test
+            - api-dominios.test
+            - api-frotas.test
+            - api-frotas-bi.test
+            - api-gestor-frota.test
+            - api-importacoes.test
+            - api-multas.test
+            - api-notifications.test
+            - api-workers.test
       links:
         - docker-in-docker
       command: /bin/sh -c "./api-importacoes/start_proccess_import_lots.sh"
@@ -422,8 +448,21 @@ services:
       extra_hosts:
         - "consultas.test:${DOCKER_HOST_IP}"
       networks:
-        - frontend
-        - backend
+        frontend:
+        backend:
+          aliases:
+            - api-anexos.test
+            - api-autenticacao.test
+            - api-anticaptcha.test
+            - api-consultas.test
+            - api-dominios.test
+            - api-frotas.test
+            - api-frotas-bi.test
+            - api-gestor-frota.test
+            - api-importacoes.test
+            - api-multas.test
+            - api-notifications.test
+            - api-workers.test
 
 ### OpenResty Server #########################################
     openresty:
