@@ -38,6 +38,13 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
     sed -i 's/security-cdn.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list \
   ;fi
 
+# Install Screen
+RUN apt-get update && \
+  apt-get install -y screen
+
+# Start as root
+USER root
+
 ###########################################################################
 # Laradock non-root user:
 ###########################################################################
