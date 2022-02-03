@@ -36,6 +36,11 @@ RUN apk --update add wget \
   openssl-dev \
   supervisor
 
+ADD https://packages.whatwedo.ch/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
+
+RUN apk --update-cache add ca-certificates && \
+    echo "https://packages.whatwedo.ch/php-alpine/v3.11/php-7.3" >> /etc/apk/repositories
+
 # Install PHP
 RUN apk --update add php; \
     apk add php-json; \
