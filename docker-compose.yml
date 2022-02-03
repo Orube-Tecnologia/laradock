@@ -534,6 +534,10 @@ services:
         - "${MYSQL_PORT}:3306"
       networks:
         - backend
+      ulimits:
+        nofile:
+          soft: 20000
+          hard: 40000
 
 ### Percona ################################################
     percona:
