@@ -295,6 +295,7 @@ services:
         - "9000"
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
+        - "consultas.test:${DOCKER_HOST_IP}"
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
         - DOCKER_HOST=tcp://docker-in-docker:2376
@@ -356,6 +357,7 @@ services:
         - workspace
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
+        - "consultas.test:${DOCKER_HOST_IP}"
       networks:
         - backend
 ### Laravel Horizon ############################################
@@ -417,6 +419,8 @@ services:
         - "${VARNISH_BACKEND_PORT}:81"
       depends_on:
         - php-fpm
+      extra_hosts:
+        - "consultas.test:${DOCKER_HOST_IP}"
       networks:
         - frontend
         - backend
