@@ -171,6 +171,7 @@ services:
           - PROTOC_VERSION=${WORKSPACE_PROTOC_VERSION}
           - INSTALL_DOCKER_CLIENT=${WORKSPACE_INSTALL_DOCKER_CLIENT}
           - INSTALL_MEMCACHED=${WORKSPACE_INSTALL_MEMCACHED}
+          - INSTALL_SCREEN=${WORKSPACE_INSTALL_SCREEN}
           - http_proxy
           - https_proxy
           - no_proxy
@@ -196,10 +197,37 @@ services:
         - DOCKER_CERT_PATH=/certs/client
         - CHOKIDAR_USEPOLLING=true
       networks:
-        - frontend
-        - backend
+        frontend:
+          aliases:
+            - api-anexos.test
+            - api-autenticacao.test
+            - api-anticaptcha.test
+            - api-consultas.test
+            - api-dominios.test
+            - api-frotas.test
+            - api-frotas-bi.test
+            - api-gestor-frota.test
+            - api-importacoes.test
+            - api-multas.test
+            - api-notifications.test
+            - api-workers.test
+        backend:
+          aliases:
+            - api-anexos.test
+            - api-autenticacao.test
+            - api-anticaptcha.test
+            - api-consultas.test
+            - api-dominios.test
+            - api-frotas.test
+            - api-frotas-bi.test
+            - api-gestor-frota.test
+            - api-importacoes.test
+            - api-multas.test
+            - api-notifications.test
+            - api-workers.test
       links:
         - docker-in-docker
+      command: /bin/sh -c "./api-importacoes/start_proccess_import_lots.sh"
 
 ### PHP-FPM ##############################################
     php-fpm:
@@ -294,6 +322,7 @@ services:
         - "9000"
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
+        - "consultas.test:${DOCKER_HOST_IP}"
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
         - DOCKER_HOST=tcp://docker-in-docker:2376
@@ -345,6 +374,7 @@ services:
           - INSTALL_IMAP=${PHP_WORKER_INSTALL_IMAP}
           - INSTALL_XMLRPC=${PHP_WORKER_INSTALL_XMLRPC}
           - INSTALL_SSDB=${PHP_WORKER_INSTALL_SSDB}
+          - INSTALL_SCREEN=${PHP_WORKER_INSTALL_SCREEN}
           - PUID=${PHP_WORKER_PUID}
           - PGID=${PHP_WORKER_PGID}
           - IMAGEMAGICK_VERSION=${PHP_WORKER_IMAGEMAGICK_VERSION}
@@ -355,6 +385,7 @@ services:
         - workspace
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
+        - "consultas.test:${DOCKER_HOST_IP}"
       networks:
         - backend
 ### Laravel Horizon ############################################
@@ -409,16 +440,31 @@ services:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
         - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
-        - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+        - ${NGINX_SSL_PATH}:/etc/letsencrypt/
       ports:
         - "${NGINX_HOST_HTTP_PORT}:80"
         - "${NGINX_HOST_HTTPS_PORT}:443"
         - "${VARNISH_BACKEND_PORT}:81"
       depends_on:
         - php-fpm
+      extra_hosts:
+        - "consultas.test:${DOCKER_HOST_IP}"
       networks:
-        - frontend
-        - backend
+        frontend:
+        backend:
+          aliases:
+            - api-anexos.test
+            - api-autenticacao.test
+            - api-anticaptcha.test
+            - api-consultas.test
+            - api-dominios.test
+            - api-frotas.test
+            - api-frotas-bi.test
+            - api-gestor-frota.test
+            - api-importacoes.test
+            - api-multas.test
+            - api-notifications.test
+            - api-workers.test
 
 ### OpenResty Server #########################################
     openresty:
@@ -529,6 +575,10 @@ services:
         - "${MYSQL_PORT}:3306"
       networks:
         - backend
+      ulimits:
+        nofile:
+          soft: 20000
+          hard: 40000
 
 ### Percona ################################################
     percona:

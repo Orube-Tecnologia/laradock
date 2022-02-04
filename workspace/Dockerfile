@@ -33,8 +33,22 @@ USER root
 ARG CHANGE_SOURCE=false
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
     # Change application source from deb.debian.org to aliyun source
-    sed -i 's/ports.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list; \
-  fi;
+    sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list && \
+    sed -i 's/security-cdn.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.list \
+  ;fi
+
+# Install Screen
+
+ARG INSTALL_SCREEN=false
+
+RUN if [ ${INSTALL_SCREEN} = true ]; then \
+    apt-get update && \
+    apt-get install -y screen \
+  ;fi
+
+# Start as root
+USER root
 
 ###########################################################################
 # Laradock non-root user:
