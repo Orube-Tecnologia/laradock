@@ -227,7 +227,6 @@ services:
             - api-workers.test
       links:
         - docker-in-docker
-      command: /bin/sh -c "./api-importacoes/start_proccess_import_lots.sh"
 
 ### PHP-FPM ##############################################
     php-fpm:
